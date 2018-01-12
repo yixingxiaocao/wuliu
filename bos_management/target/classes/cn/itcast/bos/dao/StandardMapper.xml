@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.bos.dao.StandardMapper">
+
+	<insert id="saveStandard" parameterType="cn.itcast.bos.javabean.Standard">
+
+		insert into Standard (id,name,minWeight,maxWeight,minLength,maxLength,operatingTime,operator,operatingCompany)
+
+		values (#{id},#{name},#{minWeight},#{maxWeight},#{minLength},#{maxLength},#{operatingTime},#{operator},#{operatingCompany})
+	</insert>
+    <update id="updateStandard" parameterType="cn.itcast.bos.javabean.Standard">
+        UPDATE standard SET name =#{name},minWeight=#{minWeight},maxWeight=#{maxWeight},minLength=#{minLength},maxLength=#{maxLength},
+        operatingTime=#{operatingTime},operator=#{operator},operatingCompany=#{operatingCompany}<where>
+        id=#{id}
+    </where>
+    </update>
+	<select id="findAll" resultType="cn.itcast.bos.javabean.Standard">
+		select * from standard
+	</select>
+	<select id="findList"  resultType="cn.itcast.bos.javabean.Standard">
+        select * from standard
+
+        limit #{0},#{1}
+
+	</select>
+    <select id="findCount"  resultType="int">
+        select count(0) from standard
+    </select>
+    <select id="findById" parameterType="int"  resultType="cn.itcast.bos.javabean.Standard">
+        select * from standard
+
+       <where>
+           id=#{id}
+       </where>
+
+    </select>
+</mapper>

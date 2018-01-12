@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.bos.dao.CourierMapper">
+    <insert id="saveCourier" parameterType="cn.itcast.bos.javabean.Courier">
+        INSERT INTO courier(courierNum,name,telephone,pda,deltag,checkPwd,type,company,vehicleType,vehicleNum,C_STANDARD_ID,C_TAKETIME_ID) VALUES (#{courierNum},#{name},#{telephone},#{pda},#{deltag},#{checkPwd},#{type},
+        #{company},#{vehicleType},#{vehicleNum},#{standard.id},#{takeTime.id})
+    </insert>
+    <resultMap id="courier_standard" type="cn.itcast.bos.javabean.Courier">
+        <id property="id" column="id"/>
+        <result property="courierNum" column="courierNum"/>
+        <result property="name" column="name"/>
+        <result property="telephone" column="telephone"/>
+        <result property="pda" column="pda"/>
+        <result property="deltag" column="deltag"/>
+        <result property="checkPwd" column="checkPwd"/>
+        <result property="type" column="type"/>
+        <result property="deltag" column="deltag"/>
+        <result property="company" column="company"/>
+        <result property="vehicleType" column="vehicleType"/>
+        <result property="vehicleNum" column="vehicleNum"/>
+        <association property="standard" javaType="cn.itcast.bos.javabean.Standard">
+            <result property="name" column="sname"/>
+        </association>
+    </resultMap>
+    <sql id="courier_query">
+
+          <if test="cour.courierNum!=null and cour.courierNum!=''">
+              AND c.courierNum=#{cour.courierNum}
+          </if>
+        <if test="cour.standard!=null and cour.standard!=''">
+            <if test="cour.standard.name and cour.standard.name!=''">
+                AND s.name=#{cour.standard.name}
+            </if>
+
+        </if>
+        <if test="cour.company!=null and cour.company!=''">
+            AND c.company=#{cour.company}
+        </if>
+        <if test="cour.type!=null and cour.type!=''">
+            AND c.type=#{cour.type}
+        </if>
+    </sql>
+    <select id="findList"  resultMap="courier_standard">
+        select c.*,s.name as sname from courier c ,standard s
+        <where>
+            c.C_STANDARD_ID=s.id
+            <include refid="courier_query"/>
+    </where>
+        limit #{start},#{rows}
+    </select>
+    <select id="findCount"  resultType="int">
+        select count(0) from courier c ,standard s <where>
+        <include refid="courier_query"/>
+
+    </where>
+    </select>
+    <update id="deBatch" parameterType="string" >
+        update courier SET deltag=1 <where>
+        id=#{id,jdbcType=INTEGER}a
+    </where>
+    </update>
+    <select id="findnoassociation" resultType="cn.itcast.bos.javabean.Courier">
+        SELECT * from courier
+    </select>
+</mapper>

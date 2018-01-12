@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.bos.dao.FixedAreaMapper">
+   <insert id="saveFixedArea" parameterType="cn.itcast.bos.javabean.FixedArea">
+       INSERT INTO fixedarea(id,fixedAreaName,fixedAreaLeader,telephone,company)
+       VALUES (#{id},#{fixedAreaName},#{fixedAreaLeader},#{telephone},#{company})
+   </insert>
+    <select id="findList" resultType="cn.itcast.bos.javabean.FixedArea" >
+        SELECT * from fixedarea
+        limit #{start},#{rows}
+    </select>
+    <select id="findCount" resultType="int">
+        select count(0) from fixedarea
+    </select>
+</mapper>

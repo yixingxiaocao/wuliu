@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.bos.dao.AreaMapper">
+   <insert id="saveBatchImport" parameterType="java.util.List">
+       <selectKey resultType ="java.lang.Integer" keyProperty= "id"
+                      order= "AFTER">
+                       SELECT LAST_INSERT_ID()
+                   </selectKey >
+       INSERT INTO area(id,province,city,district,postcode,citycode,shortcode) VALUES
+       <foreach collection="list" index="index" item="item"  separator=",">
+           (#{item.id,jdbcType=VARCHAR},
+           #{item.province,jdbcType=VARCHAR},
+           #{item.city,jdbcType=VARCHAR},
+           #{item.district,jdbcType=VARCHAR},
+           #{item.postcode,jdbcType=VARCHAR},
+           #{item.citycode,jdbcType=VARCHAR},
+           #{item.shortcode,jdbcType=VARCHAR})
+       </foreach>
+   </insert>
+    <sql id="area_query">
+        <if test="area.province!=null and area.province!=''">
+            province=#{area.province}
+        </if>
+        <if test="area.city!=null and area.city!=''">
+          AND  city=#{area.city}
+        </if>
+        <if test="area.district!=null and area.district!=''">
+           AND city=#{area.district}
+        </if>
+    </sql> 
+    <select id="findList" resultType="cn.itcast.bos.javabean.Area">
+        select * from area<where>
+        <include refid="area_query"/>
+    </where>
+        limit #{start},#{rows}
+    </select>
+    <select id="findCount" resultType="int">
+        SELECT count(0)from area<where>
+        <include refid="area_query"/>
+    </where>>
+    </select>
+</mapper>
